@@ -2,7 +2,7 @@
 
 WorkFlow is a premium, minimal, and highly efficient daily task management application. Built with a clean **White & Purple** aesthetic, it uses a Single Page Application (SPA) architecture on the frontend and a robust PHP/MySQL backend.
 
-**click here http://workflow-app.lovestoblog.com/**
+**Click here http://workflow-app.lovestoblog.com/**
 
 ## Features
 * **Dashboard Analytics:** Get a bird's-eye view of Today's Tasks, Completed, Pending, and Upcoming tasks.
