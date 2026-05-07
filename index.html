@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WorkFlow — Daily Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <h1>Work<span>Flow</span></h1>
+    <p>Your personal daily productivity tracker</p>
+    
+    <div id="loginSection">
+      <div class="login-fields">
+        <div class="form-grp">
+          <label class="form-label">Username</label>
+          <input class="form-input" id="loginUser" placeholder="Enter username" autocomplete="username">
+        </div>
+        <div class="form-grp">
+          <label class="form-label">Password</label>
+          <div class="pass-wrapper">
+            <input class="form-input" id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password">
+            <i class="fa-solid fa-eye pass-toggle" onclick="togglePassword('loginPass', this)"></i>
+          </div>
+        </div>
+      </div>
+      <div class="login-err" id="loginError"><i class="fa-solid fa-triangle-exclamation"></i> Invalid credentials.</div>
+      <button class="btn-save" style="width:100%;padding:12px;font-size:15px;margin-top:8px;" onclick="doLogin()">Sign In</button>
+      <div class="login-divider">or</div>
+      <p class="login-reg" onclick="toggleAuthForm('register')">Don't have an account? Register here</p>
+    </div>
+
+    <div id="registerSection" style="display:none;">
+      <div class="login-fields">
+        <div class="form-grp">
+          <label class="form-label">Full Name</label>
+          <input class="form-input" id="regName" placeholder="Enter full name">
+        </div>
+        <div class="form-grp">
+          <label class="form-label">Username</label>
+          <input class="form-input" id="regUser" placeholder="Choose a username">
+        </div>
+        <div class="form-grp">
+          <label class="form-label">Password</label>
+          <div class="pass-wrapper">
+            <input class="form-input" id="regPass" type="password" placeholder="Create password">
+            <i class="fa-solid fa-eye pass-toggle" onclick="togglePassword('regPass', this)"></i>
+          </div>
+        </div>
+      </div>
+      <div class="login-err" id="regError"><i class="fa-solid fa-triangle-exclamation"></i> Registration failed.</div>
+      <button class="btn-save" style="width:100%;padding:12px;font-size:15px;margin-top:8px;" onclick="doRegister()">Register</button>
+      <div class="login-divider">or</div>
+      <p class="login-reg" onclick="toggleAuthForm('login')">Already have an account? Login here</p>
+    </div>
+  </div>
+</div>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<div class="sidebar" id="sidebar">
+  <div class="logo">
+    <h1>Work<span>Flow</span></h1>
+    <p>Daily Tracker v1.0</p>
+  </div>
+  <div class="sidebar-user">
+    <div class="user-avatar" id="sidebarAvatar">DU</div>
+    <div class="user-info">
+      <p id="sidebarName">Demo User</p>
+      <span>Active session</span>
+    </div>
+    <div class="online-dot"></div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Main</div>
+    <div class="nav-item active" onclick="goPage('dashboard',this)"><i class="fa-solid fa-house nav-icon" style="color: #0055ff;"></i>Dashboard</div>
+    <div class="nav-item" onclick="goPage('daily-log',this)"><i class="fa-solid fa-clipboard-list nav-icon" style="color: #8D03D2;"></i>Daily Log<span class="nav-badge amber" id="logBadge">0</span></div>
+    <div class="nav-item" onclick="goPage('todo',this)"><i class="fa-solid fa-circle-check nav-icon" style="color: #00d636;"></i>To-Do List<span class="nav-badge blue" id="todoBadge">0</span></div>
+    <div class="nav-item" onclick="goPage('upcoming',this)"><i class="fa-solid fa-calendar-day nav-icon" style="color: #ff0033;"></i>Upcoming Works<span class="nav-badge coral" id="upcomingBadge">0</span></div>
+    <div class="nav-label" style="margin-top:10px;">Tools</div>
+    <div class="nav-item" onclick="goPage('calendar',this)"><i class="fa-solid fa-calendar-days nav-icon" style="color: #c8d6e5;"></i>Calendar View</div>
+  </div>
+  <div class="sidebar-footer">
+    <button class="footer-btn" onclick="exportData()"><i class="fa-solid fa-download"></i> Export</button>
+    <button class="footer-btn logout" onclick="doLogout()"><i class="fa-solid fa-power-off"></i> Logout</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <button class="hamburger" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="page-title" id="pageTitle">Dashboard</div>
+    <div class="date-chip" id="dateChip"></div>
+    <button class="add-btn" onclick="openAddModal()"><i class="fa-solid fa-plus"></i> <span class="add-label">Add New</span></button>
+  </div>
+
+  <div class="content-wrap">
+    <div class="page active" id="page-dashboard">
+      <div class="stats-row">
+  <div class="stat-card c-today" onclick="openFromDashboard('today')">
+    <i class="fa-solid fa-flag stat-icon"></i>
+    <div class="stat-label">Today's Tasks</div>
+    <div class="stat-value" id="statToday">0</div>
+    <div class="stat-sub">scheduled today</div>
+  </div>
+  <div class="stat-card c-done" onclick="openFromDashboard('done')">
+    <i class="fa-solid fa-circle-check stat-icon"></i>
+    <div class="stat-label">Completed</div>
+    <div class="stat-value" id="statDone">0</div>
+    <div class="stat-sub">tasks finished</div>
+  </div>
+  <div class="stat-card c-pending" onclick="openFromDashboard('pending')">
+    <i class="fa-solid fa-clock-rotate-left stat-icon"></i>
+    <div class="stat-label">Pending</div>
+    <div class="stat-value" id="statPending">0</div>
+    <div class="stat-sub">need attention</div>
+  </div>
+  <div class="stat-card c-upcoming" onclick="openFromDashboard('upcoming')">
+    <i class="fa-solid fa-bell stat-icon"></i>
+    <div class="stat-label">Upcoming</div>
+    <div class="stat-value" id="statUpcoming">0</div>
+    <div class="stat-sub">scheduled ahead</div>
+  </div>
+</div>
+      
+      <div class="section sec-bg-blue">
+        <div class="section-head">
+          <div class="sec-dot" style="background:var(--blue)"></div>
+          <h3>Recent Activity</h3>
+          <span class="sec-label" id="recentDateLabel"></span>
+        </div>
+        <div class="task-list" id="dashRecentList"><div class="empty-state"><i class="fa-solid fa-inbox empty-icon" style="color: #0055ff;"></i><p>No activities yet. Add your first task!</p></div></div>
+      </div>
+      
+      <div class="section sec-bg-orange">
+        <div class="section-head">
+          <div class="sec-dot" style="background:var(--amber)"></div>
+          <h3 id="dashUpcomingTitle">Upcoming Tasks</h3>
+        </div>
+        <div class="task-list" id="dashUpcomingList"><div class="empty-state"><i class="fa-solid fa-calendar-days empty-icon" style="color: #8D03D2;"></i><p>No upcoming tasks scheduled.</p></div></div>
+      </div>
+    </div>
+
+    <div class="page" id="page-daily-log">
+      <div class="section sec-bg-purple">
+        <div class="section-head">
+          <div class="sec-dot" style="background:var(--purple)"></div>
+          <h3>Daily Work Log</h3><span class="sec-label">Record your activities</span>
+        </div>
+        <div class="filter-row">
+          <input class="search-input" placeholder="Search logs..." oninput="renderLogs()" id="logSearch">
+          <select class="filter-select" id="logFilterCat" onchange="renderLogs()">
+            <option value="">All Categories</option>
+            <option>Work</option><option>Personal</option><option>Meeting</option><option>Learning</option><option>Health</option><option>Other</option>
+          </select>
+          <select class="filter-select" id="logFilterDate" onchange="renderLogs()">
+            <option value="">All Dates</option>
+            <option value="today">Today</option><option value="week">This Week</option><option value="month">This Month</option>
+          </select>
+        </div>
+        <div id="logList"><div class="empty-state"><i class="fa-solid fa-clipboard empty-icon" style="color: #9c88ff;"></i><p>No log entries yet.</p></div></div>
+      </div>
+    </div>
+
+    <div class="page" id="page-todo">
+      <div class="section sec-bg-green">
+        <div class="section-head">
+          <div class="sec-dot" style="background:var(--green)"></div>
+          <h3>Daily To-Do List</h3>
+        </div>
+        <div class="inner-tabs" id="todoTabs">
+          <div class="inner-tab active" onclick="setTodoTab('all',this)">All</div>
+          <div class="inner-tab" onclick="setTodoTab('pending',this)">Pending</div>
+          <div class="inner-tab" onclick="setTodoTab('progress',this)">In Progress</div>
+          <div class="inner-tab" onclick="setTodoTab('done',this)">Done</div>
+          <div class="inner-tab" onclick="setTodoTab('missed',this)">Missed</div>
+        </div>
+        <div class="filter-row">
+          <input class="search-input" placeholder="Search tasks..." oninput="renderTodos()" id="todoSearch">
+          <select class="filter-select" id="todoFilterPriority" onchange="renderTodos()">
+            <option value="">All Priorities</option><option>High</option><option>Medium</option><option>Low</option>
+          </select>
+          <select class="filter-select" id="todoFilterCat" onchange="renderTodos()">
+            <option value="">All Categories</option>
+            <option>Work</option><option>Personal</option><option>Meeting</option><option>Learning</option><option>Health</option><option>Other</option>
+          </select>
+        </div>
+        <div class="task-list" id="todoList"><div class="empty-state"><i class="fa-solid fa-check-double empty-icon" style="color: #00d636;"></i><p>No tasks yet.</p></div></div>
+      </div>
+    </div>
+
+    <div class="page" id="page-upcoming">
+      <div class="section sec-bg-orange">
+        <div class="section-head">
+          <div class="sec-dot" style="background:var(--amber)"></div>
+          <h3>Upcoming Works</h3><span class="sec-label">Sorted by date &amp; time</span>
+        </div>
+        <div class="filter-row">
+          <input class="search-input" placeholder="Search upcoming..." oninput="renderUpcoming()" id="upSearch">
+          <select class="filter-select" id="upFilterCat" onchange="renderUpcoming()">
+            <option value="">All Categories</option>
+            <option>Work</option><option>Personal</option><option>Meeting</option><option>Learning</option><option>Health</option><option>Other</option>
+          </select>
+          <select class="filter-select" id="upFilterPriority" onchange="renderUpcoming()">
+            <option value="">All Priorities</option><option>High</option><option>Medium</option><option>Low</option>
+          </select>
+        </div>
+        <div class="timeline" id="upcomingTimeline"><div class="empty-state"><i class="fa-regular fa-calendar-check empty-icon" style="color: #8D03D2;"></i><p>No upcoming tasks.</p></div></div>
+      </div>
+    </div>
+
+    <div class="page" id="page-calendar">
+      <div class="section sec-bg-blue">
+        <div class="section-head">
+          <div class="sec-dot" style="background:var(--blue)"></div>
+          <h3 id="calMonthTitle">Month</h3>
+          <div style="display:flex;gap:8px;margin-left:auto;">
+            <button onclick="changeMonth(-1)" class="act-btn" style="width:34px;height:34px;font-size:16px;"><i class="fa-solid fa-chevron-left"></i></button>
+            <button onclick="changeMonth(1)"  class="act-btn" style="width:34px;height:34px;font-size:16px;"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div style="padding:0 22px 20px;" id="calDayTasks"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="maybeCloseModal(event)">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h2 id="modalTitle">Add New Entry</h2>
+      <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="form-grp">
+        <label class="form-label">Entry Type</label>
+        <select class="form-select" id="entryType" onchange="toggleTypeFields()">
+          <option value="todo">To-Do Task</option>
+          <option value="log">Daily Log</option>
+          <option value="upcoming">Upcoming Work</option>
+        </select>
+      </div>
+      <div class="form-grp">
+        <label class="form-label">Title *</label>
+        <input class="form-input" id="entryTitle" placeholder="What needs to be done?">
+      </div>
+      <div class="form-grp">
+        <label class="form-label">Description</label>
+        <textarea class="form-textarea" id="entryDesc" placeholder="Add details or notes..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-grp">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="entryCat">
+            <option>Work</option><option>Personal</option><option>Meeting</option><option>Learning</option><option>Health</option><option>Other</option>
+          </select>
+        </div>
+        <div class="form-grp" id="priorityGroup">
+          <label class="form-label">Priority</label>
+          <select class="form-select" id="entryPriority">
+            <option>Medium</option><option>High</option><option>Low</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-grp">
+          <label class="form-label">Date *</label>
+          <input class="form-input" id="entryDate" type="date">
+        </div>
+        <div class="form-grp">
+          <label class="form-label">Time</label>
+          <input class="form-input" id="entryTime" type="time">
+        </div>
+      </div>
+      <div class="form-grp" id="statusGroup">
+        <label class="form-label">Status</label>
+        <select class="form-select" id="entryStatus">
+          <option value="pending">Pending</option>
+          <option value="progress">In Progress</option>
+          <option value="done">Done</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveEntry()">Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<div class="conf-overlay" id="confOverlay">
+  <div class="conf-box">
+    <i class="fa-solid fa-trash-can conf-icon" id="confIcon"></i>
+    <h3 id="confTitle">Delete this entry?</h3>
+    <p id="confMsg">This action cannot be undone.</p>
+    <div class="conf-acts">
+      <button class="btn-conf-no" onclick="closeConf()">Cancel</button>
+      <button class="btn-conf-del" id="confBtn">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/tasks.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WorkFlow — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <h1>Work<span>Flow</span></h1>
+    <p>Your personal daily productivity tracker</p>
+    <div id="loginSection">
+      <div class="login-fields">
+        <div class="form-grp">
+          <label class="form-label">Username</label>
+          <input class="form-input" id="loginUser" placeholder="Enter username" autocomplete="username">
+        </div>
+        <div class="form-grp">
+          <label class="form-label">Password</label>
+          <input class="form-input" id="loginPass" type="password" placeholder="Enter password" autocomplete="current-password">
+        </div>
+      </div>
+      <div class="login-err" id="loginError"><i class="fa-solid fa-triangle-exclamation"></i> Invalid credentials.</div>
+      <button class="btn-save" style="width:100%;padding:12px;font-size:15px;margin-top:8px;" onclick="doLogin()">Sign In</button>
+      <div class="login-divider">or</div>
+      <p class="login-reg" onclick="toggleAuthForm('register')">Don't have an account? Register here</p>
+    </div>
+    <div id="registerSection" style="display:none;">
+      <div class="login-fields">
+        <div class="form-grp">
+          <label class="form-label">Full Name</label>
+          <input class="form-input" id="regName" placeholder="Enter full name">
+        </div>
+        <div class="form-grp">
+          <label class="form-label">Username</label>
+          <input class="form-input" id="regUser" placeholder="Choose a username">
+        </div>
+        <div class="form-grp">
+          <label class="form-label">Password</label>
+          <input class="form-input" id="regPass" type="password" placeholder="Create password">
+        </div>
+      </div>
+      <div class="login-err" id="regError"><i class="fa-solid fa-triangle-exclamation"></i> Registration failed.</div>
+      <button class="btn-save" style="width:100%;padding:12px;font-size:15px;margin-top:8px;" onclick="doRegister()">Register</button>
+      <div class="login-divider">or</div>
+      <p class="login-reg" onclick="toggleAuthForm('login')">Already have an account? Login here</p>
+    </div>
+  </div>
+</div>
+<div class="toast-wrap" id="toastWrap"></div>
+<script src="js/auth.js"></script>
+</body>
+</html>
